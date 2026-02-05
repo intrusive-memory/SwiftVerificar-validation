@@ -17,12 +17,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "../SwiftVerificar-validation-profiles")
+        // Parser dependency temporarily disabled - using type stubs in ParserTypes.swift
+        // .package(path: "../SwiftVerificar-parser")
     ],
     targets: [
         .target(
             name: "SwiftVerificarValidation",
             dependencies: [
                 .product(name: "SwiftVerificarValidationProfiles", package: "SwiftVerificar-validation-profiles")
+                // Parser dependency temporarily disabled - using type stubs in ParserTypes.swift
+                // .product(name: "SwiftVerificarParser", package: "SwiftVerificar-parser")
             ]
         ),
         .testTarget(
