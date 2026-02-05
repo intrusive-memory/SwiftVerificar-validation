@@ -156,3 +156,200 @@ public enum RuleStatus: String, Sendable, Codable {
     case warning
     case error
 }
+
+// MARK: - Validation Error
+
+/// Error that occurs during PDF validation
+public struct ValidationError: Error, Sendable, CustomStringConvertible {
+    /// The error code identifying the type of error
+    public let code: ErrorCode
+
+    /// A human-readable description of the error
+    public let message: String
+
+    /// Optional context information about where the error occurred
+    public let context: ValidationContext?
+
+    /// The underlying error that caused this validation error, if any
+    public let underlyingError: (any Error)?
+
+    public init(
+        code: ErrorCode,
+        message: String,
+        context: ValidationContext? = nil,
+        underlyingError: (any Error)? = nil
+    ) {
+        self.code = code
+        self.message = message
+        self.context = context
+        self.underlyingError = underlyingError
+    }
+
+    public var description: String {
+        var desc = "ValidationError(\(code.rawValue)): \(message)"
+        if let context = context {
+            desc += " [Context: \(context)]"
+        }
+        if let underlying = underlyingError {
+            desc += " [Underlying: \(underlying)]"
+        }
+        return desc
+    }
+
+    /// Error codes for validation failures
+    public enum ErrorCode: String, Sendable, Codable {
+        /// Document parsing failed
+        case parsingFailed
+
+        /// Profile loading failed
+        case profileLoadFailed
+
+        /// Rule execution failed
+        case ruleExecutionFailed
+
+        /// Invalid document structure
+        case invalidStructure
+
+        /// Missing required metadata
+        case missingMetadata
+
+        /// Invalid object reference
+        case invalidReference
+
+        /// Unsupported feature
+        case unsupportedFeature
+
+        /// Configuration error
+        case configurationError
+
+        /// Internal validation engine error
+        case internalError
+    }
+}
+
+// MARK: - Validation Context
+
+/// Context information for validation errors
+public struct ValidationContext: Sendable, CustomStringConvertible {
+    /// The object being validated (e.g., "Page 3", "Font /F1")
+    public let objectIdentifier: String
+
+    /// The rule ID that triggered the error, if applicable
+    public let ruleId: String?
+
+    /// The location in the PDF file (page number, object number, etc.)
+    public let location: String?
+
+    /// Additional metadata about the context
+    public let metadata: [String: String]
+
+    public init(
+        objectIdentifier: String,
+        ruleId: String? = nil,
+        location: String? = nil,
+        metadata: [String: String] = [:]
+    ) {
+        self.objectIdentifier = objectIdentifier
+        self.ruleId = ruleId
+        self.location = location
+        self.metadata = metadata
+    }
+
+    public var description: String {
+        var parts: [String] = [objectIdentifier]
+        if let ruleId = ruleId {
+            parts.append("rule=\(ruleId)")
+        }
+        if let location = location {
+            parts.append("location=\(location)")
+        }
+        if !metadata.isEmpty {
+            let metaStr = metadata.map { "\($0.key)=\($0.value)" }.joined(separator: ", ")
+            parts.append(metaStr)
+        }
+        return parts.joined(separator: ", ")
+    }
+}
+
+// MARK: - Validator Configuration
+
+/// Configuration options for PDF validation
+public struct ValidatorConfiguration: Sendable {
+    /// Whether to stop validation on the first error
+    public let stopOnFirstError: Bool
+
+    /// Maximum number of errors to collect before stopping
+    public let maxErrors: Int?
+
+    /// Whether to include warnings in validation results
+    public let includeWarnings: Bool
+
+    /// Whether to perform detailed feature reporting
+    public let enableFeatureReporting: Bool
+
+    /// Whether to enable parallel rule evaluation
+    public let enableParallelValidation: Bool
+
+    /// Maximum number of concurrent validation tasks
+    public let maxConcurrentTasks: Int
+
+    /// Timeout for validation in seconds
+    public let validationTimeout: TimeInterval?
+
+    /// Custom metadata to include in validation results
+    public let customMetadata: [String: String]
+
+    /// Logging level for validation operations
+    public let loggingLevel: LoggingLevel
+
+    public init(
+        stopOnFirstError: Bool = false,
+        maxErrors: Int? = nil,
+        includeWarnings: Bool = true,
+        enableFeatureReporting: Bool = false,
+        enableParallelValidation: Bool = true,
+        maxConcurrentTasks: Int = 8,
+        validationTimeout: TimeInterval? = nil,
+        customMetadata: [String: String] = [:],
+        loggingLevel: LoggingLevel = .warning
+    ) {
+        self.stopOnFirstError = stopOnFirstError
+        self.maxErrors = maxErrors
+        self.includeWarnings = includeWarnings
+        self.enableFeatureReporting = enableFeatureReporting
+        self.enableParallelValidation = enableParallelValidation
+        self.maxConcurrentTasks = maxConcurrentTasks
+        self.validationTimeout = validationTimeout
+        self.customMetadata = customMetadata
+        self.loggingLevel = loggingLevel
+    }
+
+    /// Default configuration optimized for quick validation
+    public static let fast = ValidatorConfiguration(
+        stopOnFirstError: true,
+        enableFeatureReporting: false,
+        enableParallelValidation: true,
+        maxConcurrentTasks: 16
+    )
+
+    /// Default configuration optimized for thorough validation
+    public static let thorough = ValidatorConfiguration(
+        stopOnFirstError: false,
+        includeWarnings: true,
+        enableFeatureReporting: true,
+        enableParallelValidation: true,
+        maxConcurrentTasks: 8
+    )
+
+    /// Default configuration with conservative settings
+    public static let `default` = ValidatorConfiguration()
+
+    /// Logging level for validation operations
+    public enum LoggingLevel: String, Sendable, Codable {
+        case none
+        case error
+        case warning
+        case info
+        case debug
+    }
+}

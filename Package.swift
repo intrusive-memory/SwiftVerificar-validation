@@ -15,9 +15,15 @@ let package = Package(
             targets: ["SwiftVerificarValidation"]
         ),
     ],
+    dependencies: [
+        .package(path: "../SwiftVerificar-validation-profiles")
+    ],
     targets: [
         .target(
-            name: "SwiftVerificarValidation"
+            name: "SwiftVerificarValidation",
+            dependencies: [
+                .product(name: "SwiftVerificarValidationProfiles", package: "SwiftVerificar-validation-profiles")
+            ]
         ),
         .testTarget(
             name: "SwiftVerificarValidationTests",
