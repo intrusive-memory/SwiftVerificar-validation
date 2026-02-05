@@ -1,4 +1,5 @@
 import Foundation
+@_exported import SwiftVerificarValidationProfiles
 
 /// SwiftVerificarValidation - PDF validation engine for SwiftVerificar
 ///
@@ -21,57 +22,6 @@ public struct SwiftVerificarValidation {
 public protocol ValidationEngine: Sendable {
     /// Validate a PDF document against a profile
     func validate(_ document: Any, profile: ValidationProfile) async throws -> ValidationResult
-}
-
-// MARK: - Validation Profile
-
-/// A validation profile defining rules to check
-public struct ValidationProfile: Sendable, Identifiable {
-    public let id: String
-    public let name: String
-    public let description: String
-    public let rules: [ValidationRule]
-
-    public init(id: String, name: String, description: String, rules: [ValidationRule]) {
-        self.id = id
-        self.name = name
-        self.description = description
-        self.rules = rules
-    }
-}
-
-// MARK: - Validation Rule
-
-/// A single validation rule
-public struct ValidationRule: Sendable, Identifiable {
-    public let id: String
-    public let specification: String
-    public let clause: String
-    public let testNumber: Int
-    public let description: String
-    public let objectType: String
-    public let test: String
-    public let errorMessage: String
-
-    public init(
-        id: String,
-        specification: String,
-        clause: String,
-        testNumber: Int,
-        description: String,
-        objectType: String,
-        test: String,
-        errorMessage: String
-    ) {
-        self.id = id
-        self.specification = specification
-        self.clause = clause
-        self.testNumber = testNumber
-        self.description = description
-        self.objectType = objectType
-        self.test = test
-        self.errorMessage = errorMessage
-    }
 }
 
 // MARK: - Validation Result

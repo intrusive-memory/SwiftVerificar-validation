@@ -1,5 +1,7 @@
 import Testing
+import Foundation
 @testable import SwiftVerificarValidation
+import SwiftVerificarValidationProfiles
 
 @Suite("SwiftVerificarValidation Tests")
 struct SwiftVerificarValidationTests {
@@ -12,18 +14,23 @@ struct SwiftVerificarValidationTests {
     @Test("Validation can be instantiated")
     func canInstantiate() {
         let validation = SwiftVerificarValidation()
-        #expect(validation != nil)
+        // Just verify it creates successfully (it's a struct, can't be nil)
+        #expect(SwiftVerificarValidation.version == "0.1.0")
     }
 
     @Test("ValidationProfile can be created")
     func canCreateProfile() {
         let profile = ValidationProfile(
-            id: "test",
-            name: "Test Profile",
-            description: "A test profile",
-            rules: []
+            details: ProfileDetails(
+                name: "Test Profile",
+                description: "A test profile",
+                creator: "Test",
+                created: Date()
+            ),
+            rules: [],
+            flavour: .pdfUA2
         )
-        #expect(profile.id == "test")
+        #expect(profile.details.name == "Test Profile")
         #expect(profile.rules.isEmpty)
     }
 
