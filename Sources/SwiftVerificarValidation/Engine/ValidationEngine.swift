@@ -365,3 +365,21 @@ public actor PDFValidationEngine {
         }
     }
 }
+
+// MARK: - ValidationEngine Protocol Conformance
+
+extension PDFValidationEngine: ValidationEngine {
+    /// Validate a document against a validation profile
+    /// This is a convenience overload that accepts Any and attempts to cast to ValidationObject
+    nonisolated public func validate(_ document: Any, profile: ValidationProfile) async throws -> ValidationResult {
+        // Attempt to cast document to ValidationObject
+        guard let validationObject = document as? ValidationObject else {
+            throw ValidationError(
+                code: .invalidStructure,
+                message: "Document must conform to ValidationObject protocol"
+            )
+        }
+
+        return try await validate(document: validationObject, profile: profile)
+    }
+}
