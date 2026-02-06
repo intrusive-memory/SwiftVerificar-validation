@@ -1,5 +1,5 @@
 import Foundation
-@_exported import SwiftVerificarValidationProfiles
+import SwiftVerificarValidationProfiles
 
 /// SwiftVerificarValidation - PDF validation engine for SwiftVerificar
 ///
@@ -83,19 +83,22 @@ public struct RuleResult: Sendable, Identifiable {
     public let status: RuleStatus
     public let message: String?
     public let context: String?
+    public let explanation: String?
 
     public init(
         id: UUID = UUID(),
         ruleId: String,
         status: RuleStatus,
         message: String? = nil,
-        context: String? = nil
+        context: String? = nil,
+        explanation: String? = nil
     ) {
         self.id = id
         self.ruleId = ruleId
         self.status = status
         self.message = message
         self.context = context
+        self.explanation = explanation
     }
 }
 

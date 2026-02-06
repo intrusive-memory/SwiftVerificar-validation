@@ -203,4 +203,45 @@ struct RuleResultTests {
         #expect(result.status == .error)
         #expect(result.context != nil)
     }
+
+    // MARK: - Explanation Tests
+
+    @Test("RuleResult with explanation")
+    func withExplanation() {
+        let result = RuleResult(
+            ruleId: "rule-001",
+            status: .failed,
+            message: "Test failed",
+            explanation: "Detailed explanation of the failure"
+        )
+
+        #expect(result.explanation == "Detailed explanation of the failure")
+    }
+
+    @Test("RuleResult without explanation")
+    func withoutExplanation() {
+        let result = RuleResult(
+            ruleId: "rule-001",
+            status: .passed
+        )
+
+        #expect(result.explanation == nil)
+    }
+
+    @Test("Failed result with message, context, and explanation")
+    func failedWithAllDetails() {
+        let result = RuleResult(
+            ruleId: "6.2.11.7-1",
+            status: .failed,
+            message: "Font encoding missing",
+            context: "Page 1, Font /F3",
+            explanation: "Rule 6.2.11.7-1 requires all TrueType fonts to have encoding"
+        )
+
+        #expect(result.status == .failed)
+        #expect(result.message != nil)
+        #expect(result.context != nil)
+        #expect(result.explanation != nil)
+        #expect(result.explanation?.contains("6.2.11.7-1") == true)
+    }
 }
