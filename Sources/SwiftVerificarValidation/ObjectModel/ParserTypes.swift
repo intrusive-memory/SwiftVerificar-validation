@@ -65,6 +65,30 @@ public struct ASAtom: Sendable, Hashable, Comparable, CustomStringConvertible {
     public static let registry = ASAtom("Registry")
     public static let ordering = ASAtom("Ordering")
     public static let supplement = ASAtom("Supplement")
+
+    // Color space-related atoms
+    public static let colorSpace = ASAtom("ColorSpace")
+    public static let deviceGray = ASAtom("DeviceGray")
+    public static let deviceRGB = ASAtom("DeviceRGB")
+    public static let deviceCMYK = ASAtom("DeviceCMYK")
+    public static let calGray = ASAtom("CalGray")
+    public static let calRGB = ASAtom("CalRGB")
+    public static let lab = ASAtom("Lab")
+    public static let iccBased = ASAtom("ICCBased")
+    public static let indexed = ASAtom("Indexed")
+    public static let separation = ASAtom("Separation")
+    public static let deviceN = ASAtom("DeviceN")
+    public static let pattern = ASAtom("Pattern")
+    public static let whitePoint = ASAtom("WhitePoint")
+    public static let blackPoint = ASAtom("BlackPoint")
+    public static let gamma = ASAtom("Gamma")
+    public static let matrix = ASAtom("Matrix")
+    public static let range = ASAtom("Range")
+    public static let alternate = ASAtom("Alternate")
+    public static let n = ASAtom("N")
+    public static let hival = ASAtom("HiVal")
+    public static let lookup = ASAtom("Lookup")
+    public static let tintTransform = ASAtom("TintTransform")
 }
 
 /// Placeholder for COSObjectKey from the parser package.
