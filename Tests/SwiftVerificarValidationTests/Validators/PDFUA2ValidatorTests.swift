@@ -11,9 +11,9 @@ struct PDFUA2ValidatorTests {
     @Test("Validator initialization")
     func validatorInitialization() async {
         let validator = PDFUA2Validator()
-        let conformance = await validator.conformance
+        let conformance = validator.conformance
 
-        #expect(conformance == .pdfua2)
+        #expect(conformance == PDFUAConformance.pdfua2)
         #expect(conformance.identifier == "PDF/UA-2")
         #expect(conformance.isoReference == "ISO 14289-2:2024")
     }
@@ -22,18 +22,18 @@ struct PDFUA2ValidatorTests {
     func validatorWithConfiguration() async {
         let config = ValidatorConfiguration.thorough
         let validator = PDFUA2Validator(configuration: config)
-        let conformance = await validator.conformance
+        let conformance = validator.conformance
 
-        #expect(conformance == .pdfua2)
+        #expect(conformance == PDFUAConformance.pdfua2)
     }
 
     @Test("Validator with custom profile loader")
     func validatorWithProfileLoader() async {
         let loader = DefaultProfileLoader()
         let validator = PDFUA2Validator(profileLoader: loader)
-        let conformance = await validator.conformance
+        let conformance = validator.conformance
 
-        #expect(conformance == .pdfua2)
+        #expect(conformance == PDFUAConformance.pdfua2)
     }
 
     @Test("Detect claimed conformance - no metadata")
@@ -56,8 +56,8 @@ struct PDFUA2ValidatorTests {
             configuration: .default
         )
 
-        #expect(result.conformance == .pdfua2)
-        #expect(result.validationResult.profile.name == "PDF/UA-2")
+        #expect(result.conformance == PDFUAConformance.pdfua2)
+        #expect(result.validationResult.profileName == "PDF/UA-2")
     }
 
     @Test("Validate document with thorough configuration")
@@ -70,7 +70,7 @@ struct PDFUA2ValidatorTests {
             configuration: .thorough
         )
 
-        #expect(result.conformance == .pdfua2)
+        #expect(result.conformance == PDFUAConformance.pdfua2)
     }
 
     @Test("Validate document with fast configuration")
@@ -83,7 +83,7 @@ struct PDFUA2ValidatorTests {
             configuration: .fast
         )
 
-        #expect(result.conformance == .pdfua2)
+        #expect(result.conformance == PDFUAConformance.pdfua2)
     }
 
     @Test("Validate document - default configuration")
@@ -93,7 +93,7 @@ struct PDFUA2ValidatorTests {
 
         let result = try await validator.validate(mockDocument)
 
-        #expect(result.conformance == .pdfua2)
+        #expect(result.conformance == PDFUAConformance.pdfua2)
     }
 
     @Test("Validation result structure")
@@ -106,7 +106,7 @@ struct PDFUA2ValidatorTests {
             configuration: .default
         )
 
-        #expect(result.conformance == .pdfua2)
+        #expect(result.conformance == PDFUAConformance.pdfua2)
         #expect(result.pdfuaIssues.count >= 0)
         #expect(result.accessibilityFeatures.hasStructureTree == false)
     }
@@ -116,9 +116,14 @@ struct PDFUA2ValidatorTests {
         let validator: any ValidationEngine = PDFUA2Validator()
         let mockDocument = MockPDFDocument()
         let profile = ValidationProfile(
-            name: "PDF/UA-2",
-            description: "Test profile",
-            rules: []
+            details: ProfileDetails(
+                name: "PDF/UA-2",
+                description: "Test profile",
+                creator: "Test Suite",
+                created: Date()
+            ),
+            rules: [],
+            flavour: .pdfUA2
         )
 
         let result = try await validator.validate(mockDocument, profile: profile)
@@ -137,8 +142,8 @@ struct PDFUA2ValidatorTests {
 
         let (r1, r2) = try await (result1, result2)
 
-        #expect(r1.conformance == .pdfua2)
-        #expect(r2.conformance == .pdfua2)
+        #expect(r1.conformance == PDFUAConformance.pdfua2)
+        #expect(r2.conformance == PDFUAConformance.pdfua2)
     }
 
     @Test("Validation statistics")
@@ -151,9 +156,8 @@ struct PDFUA2ValidatorTests {
             configuration: .default
         )
 
-        let stats = result.validationResult.statistics
-        #expect(stats.totalRulesEvaluated >= 0)
-        #expect(stats.passedRules + stats.failedRules + stats.skippedRules <= stats.totalRulesEvaluated)
+        #expect(result.validationResult.totalRules >= 0)
+        #expect(result.validationResult.passedRules + result.validationResult.failedRules <= result.validationResult.totalRules)
     }
 
     @Test("Validation issues structure")
@@ -169,8 +173,6 @@ struct PDFUA2ValidatorTests {
         // Check that issues have proper structure
         for issue in result.pdfuaIssues {
             #expect(!issue.description.isEmpty)
-            #expect(issue.category != nil)
-            #expect(issue.severity != nil)
         }
     }
 
@@ -214,7 +216,7 @@ struct PDFUA2ValidatorTests {
     @Test("PDF 2.0 requirement")
     func pdf2Requirement() async throws {
         let validator = PDFUA2Validator()
-        let conformance = await validator.conformance
+        let conformance = validator.conformance
 
         // PDF/UA-2 requires PDF 2.0
         #expect(conformance.part.basePDFVersion == "2.0")
@@ -303,8 +305,8 @@ struct PDFUAComparisonTests {
         let validator1 = PDFUA1Validator()
         let validator2 = PDFUA2Validator()
 
-        let conformance1 = await validator1.conformance
-        let conformance2 = await validator2.conformance
+        let conformance1 = validator1.conformance
+        let conformance2 = validator2.conformance
 
         #expect(conformance1 != conformance2)
         #expect(conformance1.part == .part1)
@@ -316,8 +318,8 @@ struct PDFUAComparisonTests {
         let validator1 = PDFUA1Validator()
         let validator2 = PDFUA2Validator()
 
-        let conformance1 = await validator1.conformance
-        let conformance2 = await validator2.conformance
+        let conformance1 = validator1.conformance
+        let conformance2 = validator2.conformance
 
         #expect(conformance1.part.basePDFVersion == "1.4")
         #expect(conformance2.part.basePDFVersion == "2.0")
@@ -328,8 +330,8 @@ struct PDFUAComparisonTests {
         let validator1 = PDFUA1Validator()
         let validator2 = PDFUA2Validator()
 
-        let conformance1 = await validator1.conformance
-        let conformance2 = await validator2.conformance
+        let conformance1 = validator1.conformance
+        let conformance2 = validator2.conformance
 
         #expect(conformance1.isoReference == "ISO 14289-1:2014")
         #expect(conformance2.isoReference == "ISO 14289-2:2024")

@@ -10,7 +10,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Initialize PDF/A-2a validator")
     func initializeLevelA() async throws {
-        let validator = try PDFA2Validator.levelA()
+        let validator = try await PDFA2Validator.levelA()
         let conformance = validator.conformance
 
         #expect(conformance.part == .part2)
@@ -20,7 +20,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Initialize PDF/A-2b validator")
     func initializeLevelB() async throws {
-        let validator = try PDFA2Validator.levelB()
+        let validator = try await PDFA2Validator.levelB()
         let conformance = validator.conformance
 
         #expect(conformance.part == .part2)
@@ -30,7 +30,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Initialize PDF/A-2u validator")
     func initializeLevelU() async throws {
-        let validator = try PDFA2Validator.levelU()
+        let validator = try await PDFA2Validator.levelU()
         let conformance = validator.conformance
 
         #expect(conformance.part == .part2)
@@ -55,7 +55,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Validate with mock document")
     func validateDocument() async throws {
-        let validator = try PDFA2Validator.levelB()
+        let validator = try await PDFA2Validator.levelB()
         let mockDocument = MockPDFDocument()
 
         let result = try await validator.validate(mockDocument)
@@ -66,7 +66,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Level U requires Unicode")
     func levelURequiresUnicode() async throws {
-        let validator = try PDFA2Validator.levelU()
+        let validator = try await PDFA2Validator.levelU()
         let conformance = validator.conformance
 
         #expect(conformance.level.requiresUnicode == true)
@@ -74,7 +74,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Level A requires accessibility and Unicode")
     func levelARequirements() async throws {
-        let validator = try PDFA2Validator.levelA()
+        let validator = try await PDFA2Validator.levelA()
         let conformance = validator.conformance
 
         #expect(conformance.level.requiresAccessibility == true)
@@ -83,7 +83,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Level B requires neither")
     func levelBRequirements() async throws {
-        let validator = try PDFA2Validator.levelB()
+        let validator = try await PDFA2Validator.levelB()
         let conformance = validator.conformance
 
         #expect(conformance.level.requiresAccessibility == false)
@@ -92,7 +92,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Validate with fast configuration")
     func validateFastConfig() async throws {
-        let validator = try PDFA2Validator.levelU()
+        let validator = try await PDFA2Validator.levelU()
         let mockDocument = MockPDFDocument()
         let config = ValidatorConfiguration.fast
 
@@ -103,7 +103,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Validate with thorough configuration")
     func validateThoroughConfig() async throws {
-        let validator = try PDFA2Validator.levelA()
+        let validator = try await PDFA2Validator.levelA()
         let mockDocument = MockPDFDocument()
         let config = ValidatorConfiguration.thorough
 
@@ -114,7 +114,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Detect claimed conformance returns nil")
     func detectClaimedConformance() async throws {
-        let validator = try PDFA2Validator.levelB()
+        let validator = try await PDFA2Validator.levelB()
         let mockDocument = MockPDFDocument()
 
         let claimed = try await validator.detectClaimedConformance(mockDocument)
@@ -123,13 +123,18 @@ struct PDFA2ValidatorTests {
 
     @Test("ValidationEngine protocol conformance")
     func validationEngineConformance() async throws {
-        let validator = try PDFA2Validator.levelU()
+        let validator = try await PDFA2Validator.levelU()
         let mockDocument = MockPDFDocument()
 
         let profile = ValidationProfile(
-            name: "PDF/A-2u Test",
-            description: "Test",
-            rules: []
+            details: ProfileDetails(
+                name: "PDF/A-2u Test",
+                description: "Test",
+                creator: "Test Suite",
+                created: Date()
+            ),
+            rules: [],
+            flavour: .pdfA2u
         )
 
         let result = try await validator.validate(mockDocument, profile: profile)
@@ -149,9 +154,9 @@ struct PDFA2ValidatorTests {
 
     @Test("Multiple validators coexist")
     func multipleValidators() async throws {
-        let v1 = try PDFA2Validator.levelA()
-        let v2 = try PDFA2Validator.levelB()
-        let v3 = try PDFA2Validator.levelU()
+        let v1 = try await PDFA2Validator.levelA()
+        let v2 = try await PDFA2Validator.levelB()
+        let v3 = try await PDFA2Validator.levelU()
 
         let c1 = v1.conformance
         let c2 = v2.conformance
@@ -164,7 +169,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Concurrent validation")
     func concurrentValidation() async throws {
-        let validator = try PDFA2Validator.levelB()
+        let validator = try await PDFA2Validator.levelB()
         let doc1 = MockPDFDocument()
         let doc2 = MockPDFDocument()
         let doc3 = MockPDFDocument()
@@ -182,7 +187,7 @@ struct PDFA2ValidatorTests {
 
     @Test("Result includes duration")
     func resultDuration() async throws {
-        let validator = try PDFA2Validator.levelU()
+        let validator = try await PDFA2Validator.levelU()
         let mockDocument = MockPDFDocument()
 
         let result = try await validator.validate(mockDocument)
@@ -193,7 +198,7 @@ struct PDFA2ValidatorTests {
     @Test("PDF/A-2 supports transparency")
     func supportsTransparency() async throws {
         // PDF/A-2 allows transparency (unlike PDF/A-1)
-        let validator = try PDFA2Validator.levelB()
+        let validator = try await PDFA2Validator.levelB()
         let conformance = validator.conformance
 
         #expect(conformance.part == .part2)
@@ -203,7 +208,7 @@ struct PDFA2ValidatorTests {
     @Test("PDF/A-2 supports JPEG2000")
     func supportsJPEG2000() async throws {
         // PDF/A-2 allows JPEG2000 compression
-        let validator = try PDFA2Validator.levelB()
+        let validator = try await PDFA2Validator.levelB()
         let conformance = validator.conformance
 
         #expect(conformance.part == .part2)
@@ -218,10 +223,14 @@ private struct MockPDFDocument {}
 private struct MockProfileLoader: ValidationProfileLoader {
     func loadProfile(flavour: PDFAFlavour) async throws -> ValidationProfile {
         ValidationProfile(
-            name: "Mock Profile",
-            description: "Mock validation profile",
-            rules: []
+            details: ProfileDetails(
+                name: "Mock Profile",
+                description: "Mock validation profile",
+                creator: "Test Suite",
+                created: Date()
+            ),
+            rules: [],
+            flavour: .pdfA2a
         )
     }
-
 }

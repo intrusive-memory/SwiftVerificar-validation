@@ -10,7 +10,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Initialize PDF/A-1a validator")
     func initializeLevelA() async throws {
-        let validator = try PDFA1Validator.levelA()
+        let validator = try await PDFA1Validator.levelA()
         let conformance = validator.conformance
 
         #expect(conformance.part == .part1)
@@ -20,7 +20,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Initialize PDF/A-1b validator")
     func initializeLevelB() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let conformance = validator.conformance
 
         #expect(conformance.part == .part1)
@@ -45,7 +45,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Validate with mock document - compliant")
     func validateCompliantDocument() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let mockDocument = MockPDFDocument()
 
         let result = try await validator.validate(mockDocument)
@@ -56,7 +56,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Validate with configuration")
     func validateWithConfiguration() async throws {
-        let validator = try PDFA1Validator.levelA()
+        let validator = try await PDFA1Validator.levelA()
         let mockDocument = MockPDFDocument()
         let config = ValidatorConfiguration.fast
 
@@ -67,7 +67,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Validate with default configuration")
     func validateWithDefaultConfig() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let mockDocument = MockPDFDocument()
 
         let result = try await validator.validate(mockDocument)
@@ -77,7 +77,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Detect claimed conformance")
     func detectClaimedConformance() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let mockDocument = MockPDFDocument()
 
         // Currently returns nil (not implemented)
@@ -87,14 +87,19 @@ struct PDFA1ValidatorTests {
 
     @Test("ValidationEngine protocol conformance")
     func validationEngineConformance() async throws {
-        let validator = try PDFA1Validator.levelA()
+        let validator = try await PDFA1Validator.levelA()
         let mockDocument = MockPDFDocument()
 
         // Create a minimal profile
         let profile = ValidationProfile(
-            name: "Test Profile",
-            description: "Test",
-            rules: []
+            details: ProfileDetails(
+                name: "Test Profile",
+                description: "Test",
+                creator: "Test Suite",
+                created: Date()
+            ),
+            rules: [],
+            flavour: .pdfA1a
         )
 
         let result = try await validator.validate(mockDocument, profile: profile)
@@ -104,7 +109,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Level A requires structure")
     func levelARequiresStructure() async throws {
-        let validator = try PDFA1Validator.levelA()
+        let validator = try await PDFA1Validator.levelA()
         let conformance = validator.conformance
 
         #expect(conformance.level.requiresAccessibility == true)
@@ -112,7 +117,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Level B does not require structure")
     func levelBNoStructureRequired() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let conformance = validator.conformance
 
         #expect(conformance.level.requiresAccessibility == false)
@@ -120,8 +125,8 @@ struct PDFA1ValidatorTests {
 
     @Test("Multiple validators can coexist")
     func multipleValidators() async throws {
-        let validatorA = try PDFA1Validator.levelA()
-        let validatorB = try PDFA1Validator.levelB()
+        let validatorA = try await PDFA1Validator.levelA()
+        let validatorB = try await PDFA1Validator.levelB()
 
         let confA = validatorA.conformance
         let confB = validatorB.conformance
@@ -144,7 +149,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Validator categorizes font rules")
     func categorizeFontRules() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         // Test internal categorization would require exposing private methods
         // or testing through integration
         let conformance = validator.conformance
@@ -153,14 +158,14 @@ struct PDFA1ValidatorTests {
 
     @Test("Validator categorizes metadata rules")
     func categorizeMetadataRules() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let conformance = validator.conformance
         #expect(conformance.part == .part1)
     }
 
     @Test("Validator result includes duration")
     func resultIncludesDuration() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let mockDocument = MockPDFDocument()
 
         let result = try await validator.validate(mockDocument)
@@ -170,7 +175,7 @@ struct PDFA1ValidatorTests {
 
     @Test("Concurrent validation")
     func concurrentValidation() async throws {
-        let validator = try PDFA1Validator.levelB()
+        let validator = try await PDFA1Validator.levelB()
         let doc1 = MockPDFDocument()
         let doc2 = MockPDFDocument()
 
@@ -204,4 +209,3 @@ private struct MockProfileLoader: ValidationProfileLoader {
         )
     }
 }
-

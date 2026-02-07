@@ -84,9 +84,14 @@ struct PDFA4ValidatorTests {
         let mockDocument = MockPDFDocument()
 
         let profile = ValidationProfile(
-            name: "PDF/A-4 Test",
-            description: "Test",
-            rules: []
+            details: ProfileDetails(
+                name: "PDF/A-4 Test",
+                description: "Test",
+                creator: "Test Suite",
+                created: Date()
+            ),
+            rules: [],
+            flavour: .pdfA4
         )
 
         let result = try await validator.validate(mockDocument, profile: profile)
@@ -206,10 +211,14 @@ private struct MockPDFDocument {}
 private struct MockProfileLoader: ValidationProfileLoader {
     func loadProfile(flavour: PDFAFlavour) async throws -> ValidationProfile {
         ValidationProfile(
-            name: "Mock Profile",
-            description: "Mock validation profile",
-            rules: []
+            details: ProfileDetails(
+                name: "Mock Profile",
+                description: "Mock validation profile",
+                creator: "Test Suite",
+                created: Date()
+            ),
+            rules: [],
+            flavour: .pdfA4
         )
     }
-
 }

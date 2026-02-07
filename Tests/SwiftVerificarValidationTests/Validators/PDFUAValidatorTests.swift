@@ -247,28 +247,25 @@ struct PDFUAValidationResultTests {
     func compliantResult() {
         let baseResult = ValidationResult(
             isCompliant: true,
-            profile: ValidationProfile(name: "PDF/UA-1", description: "Test", rules: []),
+            profileName: "PDF/UA-1",
+            totalRules: 10,
+            passedRules: 10,
+            failedRules: 0,
             ruleResults: [],
-            executionTime: 0.5,
-            statistics: ValidationStatistics(
-                totalRulesEvaluated: 10,
-                passedRules: 10,
-                failedRules: 0,
-                skippedRules: 0
-            )
+            duration: 0.5
         )
 
         let result = PDFUAValidationResult(
             validationResult: baseResult,
-            conformance: .pdfua1,
-            claimedConformance: .pdfua1,
+            conformance: PDFUAConformance.pdfua1,
+            claimedConformance: PDFUAConformance.pdfua1,
             pdfuaIssues: [],
             accessibilityFeatures: AccessibilityFeatures()
         )
 
         #expect(result.isCompliant == true)
-        #expect(result.conformance == .pdfua1)
-        #expect(result.claimedConformance == .pdfua1)
+        #expect(result.conformance == PDFUAConformance.pdfua1)
+        #expect(result.claimedConformance == PDFUAConformance.pdfua1)
         #expect(result.conformanceMatches == true)
         #expect(result.pdfuaIssues.isEmpty)
     }
@@ -277,15 +274,12 @@ struct PDFUAValidationResultTests {
     func nonCompliantResult() {
         let baseResult = ValidationResult(
             isCompliant: false,
-            profile: ValidationProfile(name: "PDF/UA-1", description: "Test", rules: []),
+            profileName: "PDF/UA-1",
+            totalRules: 10,
+            passedRules: 8,
+            failedRules: 2,
             ruleResults: [],
-            executionTime: 0.5,
-            statistics: ValidationStatistics(
-                totalRulesEvaluated: 10,
-                passedRules: 8,
-                failedRules: 2,
-                skippedRules: 0
-            )
+            duration: 0.5
         )
 
         let issues = [
@@ -303,14 +297,14 @@ struct PDFUAValidationResultTests {
 
         let result = PDFUAValidationResult(
             validationResult: baseResult,
-            conformance: .pdfua1,
+            conformance: PDFUAConformance.pdfua1,
             claimedConformance: nil,
             pdfuaIssues: issues,
             accessibilityFeatures: AccessibilityFeatures()
         )
 
         #expect(result.isCompliant == false)
-        #expect(result.conformance == .pdfua1)
+        #expect(result.conformance == PDFUAConformance.pdfua1)
         #expect(result.claimedConformance == nil)
         #expect(result.conformanceMatches == false)
         #expect(result.pdfuaIssues.count == 2)
@@ -320,28 +314,25 @@ struct PDFUAValidationResultTests {
     func conformanceMismatch() {
         let baseResult = ValidationResult(
             isCompliant: true,
-            profile: ValidationProfile(name: "PDF/UA-2", description: "Test", rules: []),
+            profileName: "PDF/UA-2",
+            totalRules: 10,
+            passedRules: 10,
+            failedRules: 0,
             ruleResults: [],
-            executionTime: 0.5,
-            statistics: ValidationStatistics(
-                totalRulesEvaluated: 10,
-                passedRules: 10,
-                failedRules: 0,
-                skippedRules: 0
-            )
+            duration: 0.5
         )
 
         let result = PDFUAValidationResult(
             validationResult: baseResult,
-            conformance: .pdfua2,
-            claimedConformance: .pdfua1, // Claimed PDF/UA-1 but validated as PDF/UA-2
+            conformance: PDFUAConformance.pdfua2,
+            claimedConformance: PDFUAConformance.pdfua1, // Claimed PDF/UA-1 but validated as PDF/UA-2
             pdfuaIssues: [],
             accessibilityFeatures: AccessibilityFeatures()
         )
 
         #expect(result.conformanceMatches == false)
-        #expect(result.conformance == .pdfua2)
-        #expect(result.claimedConformance == .pdfua1)
+        #expect(result.conformance == PDFUAConformance.pdfua2)
+        #expect(result.claimedConformance == PDFUAConformance.pdfua1)
     }
 
     @Test("Result with accessibility features")
@@ -355,21 +346,18 @@ struct PDFUAValidationResultTests {
 
         let baseResult = ValidationResult(
             isCompliant: true,
-            profile: ValidationProfile(name: "PDF/UA-2", description: "Test", rules: []),
+            profileName: "PDF/UA-2",
+            totalRules: 10,
+            passedRules: 10,
+            failedRules: 0,
             ruleResults: [],
-            executionTime: 0.5,
-            statistics: ValidationStatistics(
-                totalRulesEvaluated: 10,
-                passedRules: 10,
-                failedRules: 0,
-                skippedRules: 0
-            )
+            duration: 0.5
         )
 
         let result = PDFUAValidationResult(
             validationResult: baseResult,
-            conformance: .pdfua2,
-            claimedConformance: .pdfua2,
+            conformance: PDFUAConformance.pdfua2,
+            claimedConformance: PDFUAConformance.pdfua2,
             pdfuaIssues: [],
             accessibilityFeatures: features
         )
