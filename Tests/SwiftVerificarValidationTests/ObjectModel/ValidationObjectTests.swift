@@ -276,7 +276,12 @@ struct WrappedPDFObjectPropertyAccessTests {
             let cosObject: COSValue? = nil
 
             func property(named name: String) -> PropertyValue? {
-                nil
+                switch name {
+                case "prop1": return .string("value1")
+                case "prop2": return .string("value2")
+                case "prop3": return .string("value3")
+                default: return nil
+                }
             }
 
             var propertyNames: [String] {

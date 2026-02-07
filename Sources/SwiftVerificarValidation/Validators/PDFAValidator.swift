@@ -241,7 +241,16 @@ extension PDFAValidator {
         profile: ValidationProfile
     ) async throws -> ValidationResult {
         let result = try await validate(document, configuration: .default)
-        return result.validationResult
+        // Use the provided profile's name instead of the internal profile name
+        return ValidationResult(
+            isCompliant: result.validationResult.isCompliant,
+            profileName: profile.details.name,
+            totalRules: result.validationResult.totalRules,
+            passedRules: result.validationResult.passedRules,
+            failedRules: result.validationResult.failedRules,
+            ruleResults: result.validationResult.ruleResults,
+            duration: result.validationResult.duration
+        )
     }
 
     /// Validate with default configuration

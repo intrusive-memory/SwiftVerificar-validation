@@ -433,7 +433,8 @@ struct EvaluationContextTests {
             .location("Page 2")
             .build()
 
-        #expect(context1.documentLocation == "Page 2") // Builder is mutable
+        // Builder is a value type — each .location() call returns a new copy
+        #expect(context1.documentLocation == "Page 1")
         #expect(context2.documentLocation == "Page 2")
     }
 

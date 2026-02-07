@@ -206,14 +206,19 @@ public struct ProfileRuleEvaluator: Sendable {
     ) -> [String: ExpressionPropertyValue] {
         var properties: [String: ExpressionPropertyValue] = [:]
 
-        // Extract all properties from the object
+        // Add profile variables first (lowest priority)
+        for (name, value) in context.profileVariables {
+            properties[name] = value
+        }
+
+        // Extract all properties from the object (overrides variables)
         for name in object.propertyNames {
             if let value = object.property(named: name) {
                 properties[name] = convertPropertyValue(value)
             }
         }
 
-        // Add context-provided properties
+        // Add context-provided properties (highest priority)
         for (name, value) in context.additionalProperties {
             properties[name] = value
         }

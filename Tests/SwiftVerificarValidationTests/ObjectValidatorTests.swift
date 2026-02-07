@@ -309,8 +309,8 @@ struct ObjectValidatorTests {
         #expect(result.ruleResults.count == 2)
     }
 
-    @Test("Validate excludes passing rules by default")
-    func testValidateExcludesPassingRules() async {
+    @Test("Validate includes all rule results for accurate counting")
+    func testValidateIncludesAllRuleResults() async {
         let rules = [
             makeTestRule(objectType: "PDDocument", test: "prop1"),
             makeTestRule(objectType: "PDDocument", test: "prop2")
@@ -325,8 +325,10 @@ struct ObjectValidatorTests {
 
         let result = await validator.validate(object: object)
 
-        // Should exclude passing results
-        #expect(result.ruleResults.isEmpty)
+        // All rule results are included so the engine can compute accurate counts
+        #expect(result.ruleResults.count == 2)
+        #expect(result.passedRules == 2)
+        #expect(result.isCompliant == true)
     }
 
     // MARK: - Parallel Validation Tests

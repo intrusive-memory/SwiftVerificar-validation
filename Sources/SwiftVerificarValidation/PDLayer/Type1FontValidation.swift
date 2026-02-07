@@ -1,6 +1,5 @@
 import Foundation
 #if canImport(SwiftVerificarParser)
-import SwiftVerificarParser
 #endif
 
 // MARK: - Type 1 Font Validation

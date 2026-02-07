@@ -175,7 +175,7 @@ public actor PDFValidationEngine {
             if let cachedResult = resultCache[cacheKey] {
                 statistics = Statistics(
                     totalValidations: statistics.totalValidations + 1,
-                    totalRulesExecuted: statistics.totalRulesExecuted,
+                    totalRulesExecuted: statistics.totalRulesExecuted + cachedResult.totalRules,
                     totalValidationTime: statistics.totalValidationTime,
                     cacheHits: statistics.cacheHits + 1
                 )
@@ -330,8 +330,28 @@ public actor PDFValidationEngine {
         document: ValidationObject,
         profile: ValidationProfile
     ) -> String {
-        // Simple cache key based on document type and profile ID
-        "\(document.objectType)-\(profile.details.name)-\(profile.flavour.rawValue)"
+        // Build a cache key from document type, property content, and profile.
+        // We include which rule-referenced properties exist to distinguish
+        // documents of the same type but different content.
+        var key = "\(document.objectType)-\(profile.details.name)-\(profile.flavour.rawValue)"
+        // Hash which tested properties are present in this document
+        var propSignature: [String] = []
+        for rule in profile.rules where rule.object == document.objectType {
+            let test = rule.test.trimmingCharacters(in: .whitespacesAndNewlines)
+            // Use simple property name (for "prop" style tests)
+            let propName: String
+            if !test.contains("==") && !test.contains("!=") && !test.contains(">") && !test.contains("<") {
+                propName = test
+            } else {
+                propName = test
+            }
+            let has = document.hasProperty(propName)
+            propSignature.append("\(propName):\(has)")
+        }
+        if !propSignature.isEmpty {
+            key += "-" + propSignature.joined(separator: ",")
+        }
+        return key
     }
 
     private func withThrowingTimeout<T>(
@@ -373,10 +393,15 @@ extension PDFValidationEngine: ValidationEngine {
     /// This is a convenience overload that accepts Any and attempts to cast to ValidationObject
     nonisolated public func validate(_ document: Any, profile: ValidationProfile) async throws -> ValidationResult {
         // Attempt to cast document to ValidationObject
-        guard let validationObject = document as? ValidationObject else {
-            throw ValidationError(
-                code: .invalidStructure,
-                message: "Document must conform to ValidationObject protocol"
+        let validationObject: ValidationObject
+        if let vo = document as? ValidationObject {
+            validationObject = vo
+        } else {
+            // Wrap unknown document types as a generic ValidationObject
+            // This allows stub validators to work with any document type
+            validationObject = SimpleValidationObject(
+                objectType: String(describing: type(of: document)),
+                properties: [:]
             )
         }
 

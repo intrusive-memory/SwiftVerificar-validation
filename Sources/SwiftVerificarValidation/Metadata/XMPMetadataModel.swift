@@ -371,6 +371,12 @@ public struct PDFAIdentificationSchema: Sendable, Equatable {
     public func validate() -> [XMPValidationIssue] {
         var issues: [XMPValidationIssue] = []
 
+        // If neither part nor conformance is set, no PDF/A identification
+        // was attempted. This is valid for non-PDF/A documents.
+        guard part != nil || conformance != nil else {
+            return issues
+        }
+
         // Check for required properties
         if part == nil {
             issues.append(XMPValidationIssue(

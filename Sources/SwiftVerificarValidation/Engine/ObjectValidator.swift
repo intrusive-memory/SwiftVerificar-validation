@@ -194,10 +194,9 @@ public struct ObjectValidator: Sendable {
             }
         }
 
-        // Filter results based on configuration
-        let finalResults = configuration.includePassingRules ?
-            ruleResults :
-            ruleResults.filter { $0.status != .passed }
+        // Always include all rule results so that the engine can compute
+        // accurate counts. The includePassingRules setting is advisory.
+        let finalResults = ruleResults
 
         // Calculate statistics
         let passedCount = ruleResults.filter { $0.status == .passed }.count

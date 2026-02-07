@@ -1,6 +1,5 @@
 import Foundation
 #if canImport(SwiftVerificarParser)
-import SwiftVerificarParser
 #endif
 
 // MARK: - DeviceRGB Validation

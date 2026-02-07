@@ -139,7 +139,8 @@ public struct PDFDateParser: Sendable {
         if let timeZone = parseTimeZone(dateString) {
             components.timeZone = timeZone
         } else {
-            components.timeZone = TimeZone(secondsFromGMT: 0)
+            // No timezone specified — per PDF spec, treat as local time
+            components.timeZone = .current
         }
 
         return components.date
