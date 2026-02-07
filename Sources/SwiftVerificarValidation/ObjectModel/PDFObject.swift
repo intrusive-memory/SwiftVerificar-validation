@@ -1,5 +1,6 @@
 import Foundation
 #if canImport(SwiftVerificarParser)
+import SwiftVerificarParser
 #endif
 
 /// Protocol representing any PDF object in the validation layer.
