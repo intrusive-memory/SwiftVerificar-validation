@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(SwiftVerificarParser)
+import SwiftVerificarParser
+#endif
 
 /// Represents extracted feature data in a tree structure.
 ///
