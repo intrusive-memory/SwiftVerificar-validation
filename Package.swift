@@ -15,9 +15,15 @@ let package = Package(
             targets: ["SwiftVerificarValidation"]
         ),
     ],
+    dependencies: [
+        .package(url: "https://github.com/intrusive-memory/SwiftVerificar-validation-profiles.git", from: "0.1.0"),
+    ],
     targets: [
         .target(
-            name: "SwiftVerificarValidation"
+            name: "SwiftVerificarValidation",
+            dependencies: [
+                .product(name: "SwiftVerificarValidationProfiles", package: "SwiftVerificar-validation-profiles"),
+            ]
         ),
         .testTarget(
             name: "SwiftVerificarValidationTests",
