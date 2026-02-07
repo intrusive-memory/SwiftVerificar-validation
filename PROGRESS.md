@@ -1,11 +1,11 @@
 # SwiftVerificar-validation Progress
 
 ## Current State
-- **Status**: Sprint 16 Complete (Remaining PD Types)
-- Last completed sprint: 16
+- **Status**: Sprint 17 Complete (SA Layer Core)
+- Last completed sprint: 17
 - Build status: passing
-- Total test count: 2603 tests (173 new remaining PD types tests)
-- Code coverage: Validation-model PD layer complete with all PD types: documents, pages, resources, content streams, structure elements, annotations, forms, ExtGState, fonts, color spaces, external objects, output intents, actions, destinations, OCG layers, patterns, shadings, XObjects, and outlines
+- Total test count: 2745 tests (142 new SA layer core tests)
+- Code coverage: SA layer core types complete with SAObject protocol, SADocument, SAPage, SAStructureRoot, and SANode wrapping PD-layer validated types for accessibility analysis
 
 ## Completed Sprints
 - Sprint 1: Core Validation Types -- 3 new types, 135 tests in 9 files
@@ -24,9 +24,10 @@
 - Sprint 14: Color Space Validation -- 9 new types, 234 tests in 9 files
 - Sprint 15: External Object Validation -- 5 new types, 220 tests in 5 files
 - Sprint 16: Remaining PD Types -- 8 new types (17 public types including enums), 173 tests in 8 files
+- Sprint 17: SA Layer Core (EP Sprint 14) -- 5 new types (SAObject, SADocument, SAPage, SAStructureRoot, SANode), 142 tests in 5 files
 
 ## Next Sprint
-- All validation-model PD layer sprints complete. Next: Sprint 17 (SA Layer Core, EP Sprint 14)
+- Sprint 18: SA Layer Extended (EP Sprint 15) -- SAStructureElement, ContentChunkContainer, ContentChunkFactory, ContentChunkParser, WCAGValidationContext
 
 ## Files Created (cumulative)
 
@@ -111,6 +112,11 @@
 - Sources/SwiftVerificarValidation/Operators/ColorOperatorValidator.swift (new - color operator validator)
 - Sources/SwiftVerificarValidation/Operators/TextOperatorValidator.swift (new - text operator validator)
 - Sources/SwiftVerificarValidation/Operators/GraphicsStateValidator.swift (new - graphics state validator)
+- Sources/SwiftVerificarValidation/SALayer/SAObject.swift (new - Sprint 17, SAObject protocol and SAObjectType enum)
+- Sources/SwiftVerificarValidation/SALayer/SADocument.swift (new - Sprint 17, SA document wrapping ValidatedDocument)
+- Sources/SwiftVerificarValidation/SALayer/SAPage.swift (new - Sprint 17, SA page wrapping ValidatedPage)
+- Sources/SwiftVerificarValidation/SALayer/SAStructureRoot.swift (new - Sprint 17, SA structure root wrapping ValidatedStructTreeRoot)
+- Sources/SwiftVerificarValidation/SALayer/SANode.swift (new - Sprint 17, SA node for accessibility tree traversal)
 
 ### Tests
 - Tests/SwiftVerificarValidationTests/SwiftVerificarValidationTests.swift
@@ -198,6 +204,11 @@
 - Tests/SwiftVerificarValidationTests/Operators/ColorOperatorValidatorTests.swift (new)
 - Tests/SwiftVerificarValidationTests/Operators/TextOperatorValidatorTests.swift (new)
 - Tests/SwiftVerificarValidationTests/Operators/GraphicsStateValidatorTests.swift (new)
+- Tests/SwiftVerificarValidationTests/SALayer/SAObjectTests.swift (new - Sprint 17, 13 tests)
+- Tests/SwiftVerificarValidationTests/SALayer/SADocumentTests.swift (new - Sprint 17, 26 tests)
+- Tests/SwiftVerificarValidationTests/SALayer/SAPageTests.swift (new - Sprint 17, 23 tests)
+- Tests/SwiftVerificarValidationTests/SALayer/SAStructureRootTests.swift (new - Sprint 17, 29 tests)
+- Tests/SwiftVerificarValidationTests/SALayer/SANodeTests.swift (new - Sprint 17, 51 tests)
 
 ## Package Dependencies
 - SwiftVerificarValidationProfiles (local path dependency)
@@ -342,3 +353,17 @@
 - Sprint 15: All types conform to Sendable, PDValidationObject, and Equatable
 - Sprint 15: 220 new tests across 5 test files with 100% pass rate for new code
 - Sprint 15: Build succeeds, dependency compliance clean, sandbox compliance clean, no force unwraps
+- Sprint 17: SA Layer Core (EP Sprint 14) - Implemented SA layer base types for WCAG validation
+- Sprint 17: SAObject protocol as base interface for all SA layer types (extends Sendable, Equatable, Identifiable)
+- Sprint 17: SAObjectType enum with 5 cases (document, page, structureRoot, node, structureElement)
+- Sprint 17: ObjectContext extensions for SA-specific contexts (saDocument, saPage, saStructureRoot, saNode)
+- Sprint 17: SADocument wraps ValidatedDocument with accessibility-specific semantics (language, tagged status, basic accessibility check)
+- Sprint 17: SAPage wraps ValidatedPage with page-level accessibility properties (annotations, content streams, nodes)
+- Sprint 17: SAStructureRoot wraps ValidatedStructTreeRoot with accessibility tree traversal (allNodes, headings, figures, tables, lists)
+- Sprint 17: SANode wraps ValidatedStructElem for accessibility tree nodes with inherited language, effective language, alt text checks
+- Sprint 17: SANode provides tree traversal (allDescendants, descendants(ofType:), hasAccessibilityIssues)
+- Sprint 17: All SA types provide accessibilityProperty(named:) for WCAG rule evaluation
+- Sprint 17: Factory methods on all types for convenient test creation (minimal, accessible, heading, figure, paragraph)
+- Sprint 17: All types conform to Sendable via SAObject protocol, and Equatable
+- Sprint 17: 142 new tests across 5 test files with 100% pass rate for new code
+- Sprint 17: Build succeeds, dependency compliance clean (Foundation only), sandbox compliance clean, no force unwraps
