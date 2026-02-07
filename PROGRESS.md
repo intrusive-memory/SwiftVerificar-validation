@@ -1,11 +1,11 @@
 # SwiftVerificar-validation Progress
 
 ## Current State
-- **Status**: Sprint 15 Complete (External Object Validation)
-- Last completed sprint: 15
+- **Status**: Sprint 16 Complete (Remaining PD Types)
+- Last completed sprint: 16
 - Build status: passing
-- Total test count: 2430 tests (220 new external object validation tests)
-- Code coverage: Core validation infrastructure complete with PDF/A, PDF/UA validators, Feature Reporting, Metadata Fixer, PD Layer, Operators, Structure Validation, Annotations, Font Validation, Color Space Validation, and External Object Validation
+- Total test count: 2603 tests (173 new remaining PD types tests)
+- Code coverage: Validation-model PD layer complete with all PD types: documents, pages, resources, content streams, structure elements, annotations, forms, ExtGState, fonts, color spaces, external objects, output intents, actions, destinations, OCG layers, patterns, shadings, XObjects, and outlines
 
 ## Completed Sprints
 - Sprint 1: Core Validation Types -- 3 new types, 135 tests in 9 files
@@ -23,9 +23,10 @@
 - Sprint 13: Font Validation -- 7 new types, 210 tests in 7 files
 - Sprint 14: Color Space Validation -- 9 new types, 234 tests in 9 files
 - Sprint 15: External Object Validation -- 5 new types, 220 tests in 5 files
+- Sprint 16: Remaining PD Types -- 8 new types (17 public types including enums), 173 tests in 8 files
 
 ## Next Sprint
-- Sprint 16: Remaining PD Types (consolidate and close out validation-model module)
+- All validation-model PD layer sprints complete. Next: Sprint 17 (SA Layer Core, EP Sprint 14)
 
 ## Files Created (cumulative)
 
@@ -97,6 +98,14 @@
 - Sources/SwiftVerificarValidation/PDLayer/EmbeddedFileValidation.swift (new - Sprint 15, embedded file validation with MIME type, AFRelationship, PDF/A compliance)
 - Sources/SwiftVerificarValidation/PDLayer/PKCSValidation.swift (new - Sprint 15, PKCS digital signature validation with certificate, timestamp, byte range)
 - Sources/SwiftVerificarValidation/PDLayer/ValidatedMetadata.swift (new - Sprint 15, XMP/document metadata validation with schema checks, synchronization)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedOutputIntent.swift (new - Sprint 16, output intent validation with PDF/A compliance)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedAction.swift (new - Sprint 16, PDF action validation with type classification)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedDestination.swift (new - Sprint 16, named/explicit destination validation)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedOptionalContentGroup.swift (new - Sprint 16, OCG/layer validation with PDF/A-2 compliance)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedPattern.swift (new - Sprint 16, tiling/shading pattern validation)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedShading.swift (new - Sprint 16, shading dictionary validation for gradients and meshes)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedXObject.swift (new - Sprint 16, image/form/PS XObject validation)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedOutline.swift (new - Sprint 16, outline/bookmark validation with accessibility checks)
 - Sources/SwiftVerificarValidation/Operators/ValidatedOperator.swift (new - validated operator enum)
 - Sources/SwiftVerificarValidation/Operators/OperatorValidationContext.swift (new - operator validation context)
 - Sources/SwiftVerificarValidation/Operators/ColorOperatorValidator.swift (new - color operator validator)
@@ -176,6 +185,14 @@
 - Tests/SwiftVerificarValidationTests/PDLayer/EmbeddedFileValidationTests.swift (new - Sprint 15, 51 tests)
 - Tests/SwiftVerificarValidationTests/PDLayer/PKCSValidationTests.swift (new - Sprint 15, 46 tests)
 - Tests/SwiftVerificarValidationTests/PDLayer/ValidatedMetadataTests.swift (new - Sprint 15, 30 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedOutputIntentTests.swift (new - Sprint 16, 21 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedActionTests.swift (new - Sprint 16, 25 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedDestinationTests.swift (new - Sprint 16, 22 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedOptionalContentGroupTests.swift (new - Sprint 16, 18 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedPatternTests.swift (new - Sprint 16, 25 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedShadingTests.swift (new - Sprint 16, 24 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedXObjectTests.swift (new - Sprint 16, 27 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedOutlineTests.swift (new - Sprint 16, 24 tests)
 - Tests/SwiftVerificarValidationTests/Operators/ValidatedOperatorTests.swift (new)
 - Tests/SwiftVerificarValidationTests/Operators/OperatorValidationContextTests.swift (new)
 - Tests/SwiftVerificarValidationTests/Operators/ColorOperatorValidatorTests.swift (new)
