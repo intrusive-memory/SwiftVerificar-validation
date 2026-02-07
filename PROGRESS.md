@@ -1,11 +1,11 @@
 # SwiftVerificar-validation Progress
 
 ## Current State
-- **Status**: Sprint 14 Complete (Color Space Validation)
-- Last completed sprint: 14
+- **Status**: Sprint 15 Complete (External Object Validation)
+- Last completed sprint: 15
 - Build status: passing
-- Total test count: 2053 tests (234 new color space validation tests)
-- Code coverage: Core validation infrastructure complete with PDF/A, PDF/UA validators, Feature Reporting, Metadata Fixer, PD Layer, Operators, Structure Validation, Annotations, Font Validation, and Color Space Validation
+- Total test count: 2430 tests (220 new external object validation tests)
+- Code coverage: Core validation infrastructure complete with PDF/A, PDF/UA validators, Feature Reporting, Metadata Fixer, PD Layer, Operators, Structure Validation, Annotations, Font Validation, Color Space Validation, and External Object Validation
 
 ## Completed Sprints
 - Sprint 1: Core Validation Types -- 3 new types, 135 tests in 9 files
@@ -22,9 +22,10 @@
 - Sprint 12: Annotation Validation -- 4 new types (ValidatedAnnotation, AnnotationType, ValidatedAcroForm, ValidatedExtGState)
 - Sprint 13: Font Validation -- 7 new types, 210 tests in 7 files
 - Sprint 14: Color Space Validation -- 9 new types, 234 tests in 9 files
+- Sprint 15: External Object Validation -- 5 new types, 220 tests in 5 files
 
 ## Next Sprint
-- Sprint 15: External Object Validation (ICCProfileValidation, JPEG2000Validation, EmbeddedFileValidation, PKCSValidation, ValidatedMetadata)
+- Sprint 16: Remaining PD Types (consolidate and close out validation-model module)
 
 ## Files Created (cumulative)
 
@@ -91,6 +92,11 @@
 - Sources/SwiftVerificarValidation/PDLayer/ColorSpaces/CalRGBValidation.swift (new - Sprint 14, CalRGB calibrated RGB validation)
 - Sources/SwiftVerificarValidation/PDLayer/ColorSpaces/IndexedValidation.swift (new - Sprint 14, Indexed color space validation)
 - Sources/SwiftVerificarValidation/PDLayer/ColorSpaces/SeparationValidation.swift (new - Sprint 14, Separation spot color validation)
+- Sources/SwiftVerificarValidation/PDLayer/ICCProfileValidation.swift (new - Sprint 15, ICC profile validation with version, color space, component count)
+- Sources/SwiftVerificarValidation/PDLayer/JPEG2000Validation.swift (new - Sprint 15, JPEG 2000 image validation with compression, resolution, compliance)
+- Sources/SwiftVerificarValidation/PDLayer/EmbeddedFileValidation.swift (new - Sprint 15, embedded file validation with MIME type, AFRelationship, PDF/A compliance)
+- Sources/SwiftVerificarValidation/PDLayer/PKCSValidation.swift (new - Sprint 15, PKCS digital signature validation with certificate, timestamp, byte range)
+- Sources/SwiftVerificarValidation/PDLayer/ValidatedMetadata.swift (new - Sprint 15, XMP/document metadata validation with schema checks, synchronization)
 - Sources/SwiftVerificarValidation/Operators/ValidatedOperator.swift (new - validated operator enum)
 - Sources/SwiftVerificarValidation/Operators/OperatorValidationContext.swift (new - operator validation context)
 - Sources/SwiftVerificarValidation/Operators/ColorOperatorValidator.swift (new - color operator validator)
@@ -165,6 +171,11 @@
 - Tests/SwiftVerificarValidationTests/PDLayer/ColorSpaces/CalRGBValidationTests.swift (new - Sprint 14, 28 tests)
 - Tests/SwiftVerificarValidationTests/PDLayer/ColorSpaces/IndexedValidationTests.swift (new - Sprint 14, 27 tests)
 - Tests/SwiftVerificarValidationTests/PDLayer/ColorSpaces/SeparationValidationTests.swift (new - Sprint 14, 31 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ICCProfileValidationTests.swift (new - Sprint 15, 51 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/JPEG2000ValidationTests.swift (new - Sprint 15, 42 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/EmbeddedFileValidationTests.swift (new - Sprint 15, 51 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/PKCSValidationTests.swift (new - Sprint 15, 46 tests)
+- Tests/SwiftVerificarValidationTests/PDLayer/ValidatedMetadataTests.swift (new - Sprint 15, 30 tests)
 - Tests/SwiftVerificarValidationTests/Operators/ValidatedOperatorTests.swift (new)
 - Tests/SwiftVerificarValidationTests/Operators/OperatorValidationContextTests.swift (new)
 - Tests/SwiftVerificarValidationTests/Operators/ColorOperatorValidatorTests.swift (new)
@@ -295,3 +306,22 @@
 - Sprint 14: All types conform to Sendable, PDValidationObject (via protocol chain), and Equatable
 - Sprint 14: 234 new tests across 9 test files with 100% pass rate for new code
 - Sprint 14: Build succeeds, dependency compliance clean, sandbox compliance clean, no force unwraps
+- Sprint 15: External Object Validation (EP Sprint 10) - Implemented external object validation types
+- Sprint 15: ICCProfileValidation for ICC color profile validation with version parsing, PDF/A compliance (v2 for PDF/A-1, v4 for PDF/A-2+)
+- Sprint 15: ICCProfileType enum with 8 cases (Input, Display, Output, DeviceLink, ColorSpace, Abstract, NamedColor, Unknown)
+- Sprint 15: ICCProfileValidation includes component count consistency, rendering intent validation, required tag checking
+- Sprint 15: JPEG2000Validation for JPEG 2000 image validation with compression type, color space, bit depth, resolution levels
+- Sprint 15: JPEG2000CompressionType enum (Lossy, Lossless, Unknown) and JPEG2000ColorSpace enum (7 cases)
+- Sprint 15: JPEG2000Validation includes PDF/A-1 compliance (no JPX extensions) and PDF/A-2 compliance checks
+- Sprint 15: EmbeddedFileValidation for embedded file validation with MIME type, file specification, AFRelationship
+- Sprint 15: EmbeddedFileRelationship enum with 9 cases (Source, Data, Alternative, Supplement, EncryptedPayload, FormData, Schema, Unspecified, Unknown)
+- Sprint 15: EmbeddedFileValidation PDF/A compliance: PDF/A-1 prohibits all, PDF/A-2 requires PDF/A claim, PDF/A-3 requires AFRelationship
+- Sprint 15: PKCSValidation for PKCS digital signature validation with SubFilter, byte range, certificate info, timestamp
+- Sprint 15: PKCSSignatureType enum with 6 cases (PKCS7Detached, PKCS7SHA1, X509RSASHA1, CAdESDetached, RFC3161, Unknown)
+- Sprint 15: PKCSValidation includes byte range coverage validation, PDF/A-1 and PDF/A-2 signature compliance checks
+- Sprint 15: ValidatedMetadata for XMP/document metadata validation with schema presence, PDF/A/UA identification, synchronization
+- Sprint 15: ValidatedMetadata tracks 8 synchronization properties (title, author, subject, keywords, producer, creator tool, create date, mod date)
+- Sprint 15: ValidatedMetadata isPDFACompliant computed property combines well-formedness, schemas, identification, synchronization, and extensions
+- Sprint 15: All types conform to Sendable, PDValidationObject, and Equatable
+- Sprint 15: 220 new tests across 5 test files with 100% pass rate for new code
+- Sprint 15: Build succeeds, dependency compliance clean, sandbox compliance clean, no force unwraps
