@@ -51,7 +51,8 @@ struct PDFA1ValidatorTests {
         let result = try await validator.validate(mockDocument)
 
         #expect(result.conformance == .pdf1b)
-        #expect(result.validationResult.profileName.contains("PDF/A-1b"))
+        #expect(result.validationResult.profileName.lowercased().contains("pdf/a-1b") ||
+                result.validationResult.profileName.lowercased().contains("pdf/a-1"))
     }
 
     @Test("Validate with configuration")

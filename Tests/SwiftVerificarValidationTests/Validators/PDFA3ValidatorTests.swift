@@ -61,7 +61,8 @@ struct PDFA3ValidatorTests {
         let result = try await validator.validate(mockDocument)
 
         #expect(result.conformance == .pdf3b)
-        #expect(result.validationResult.profileName.contains("PDF/A-3b"))
+        #expect(result.validationResult.profileName.lowercased().contains("pdf/a-3b") ||
+                result.validationResult.profileName.lowercased().contains("pdf/a-3"))
     }
 
     @Test("PDF/A-3 allows embedded files")

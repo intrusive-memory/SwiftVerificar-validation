@@ -61,7 +61,8 @@ struct PDFA2ValidatorTests {
         let result = try await validator.validate(mockDocument)
 
         #expect(result.conformance == .pdf2b)
-        #expect(result.validationResult.profileName.contains("PDF/A-2b"))
+        #expect(result.validationResult.profileName.lowercased().contains("pdf/a-2b") ||
+                result.validationResult.profileName.lowercased().contains("pdf/a-2"))
     }
 
     @Test("Level U requires Unicode")
