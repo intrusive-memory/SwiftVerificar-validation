@@ -6,6 +6,7 @@ import struct SwiftVerificarValidationProfiles.ErrorDetails
 import struct SwiftVerificarValidationProfiles.Reference
 import enum SwiftVerificarValidationProfiles.Specification
 @testable import SwiftVerificarValidation
+import SwiftVerificarParser
 
 @Suite("ProfileRuleEvaluator Tests")
 struct ProfileRuleEvaluatorTests {

@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 @testable import SwiftVerificarValidation
+import SwiftVerificarParser
 
 /// Tests for GraphicsStateValidator.
 @Suite("GraphicsStateValidator Tests")

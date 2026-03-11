@@ -17,17 +17,23 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/intrusive-memory/SwiftVerificar-validation-profiles.git", from: "0.1.0"),
+        // Release: switch to .package(url: "https://github.com/intrusive-memory/SwiftVerificar-parser.git", from: "0.2.0")
+        .package(path: "../SwiftVerificar-parser"),
     ],
     targets: [
         .target(
             name: "SwiftVerificarValidation",
             dependencies: [
                 .product(name: "SwiftVerificarValidationProfiles", package: "SwiftVerificar-validation-profiles"),
+                .product(name: "SwiftVerificarParser", package: "SwiftVerificar-parser"),
             ]
         ),
         .testTarget(
             name: "SwiftVerificarValidationTests",
-            dependencies: ["SwiftVerificarValidation"]
+            dependencies: [
+                "SwiftVerificarValidation",
+                .product(name: "SwiftVerificarParser", package: "SwiftVerificar-parser"),
+            ]
         ),
     ]
 )

@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 @testable import SwiftVerificarValidation
+import SwiftVerificarParser
 
 // MARK: - ValidatedResource Protocol Tests
 

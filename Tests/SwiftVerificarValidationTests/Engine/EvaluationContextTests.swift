@@ -3,6 +3,7 @@ import Testing
 // Import only the ExpressionPropertyValue typealias from profiles to avoid ambiguity
 import typealias SwiftVerificarValidationProfiles.ExpressionPropertyValue
 @testable import SwiftVerificarValidation
+import SwiftVerificarParser
 
 
 @Suite("EvaluationContext Tests")

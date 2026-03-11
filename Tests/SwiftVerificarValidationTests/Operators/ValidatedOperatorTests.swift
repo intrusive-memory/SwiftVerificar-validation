@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 @testable import SwiftVerificarValidation
+import SwiftVerificarParser
 
 /// Tests for ValidatedOperator enum.
 @Suite("ValidatedOperator Tests")
