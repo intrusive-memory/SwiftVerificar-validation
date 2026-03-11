@@ -1,5 +1,8 @@
 import Foundation
 import SwiftVerificarValidationProfiles
+#if canImport(SwiftVerificarParser)
+import SwiftVerificarParser
+#endif
 
 /// Validator for PDF/A-4 conformance
 ///
@@ -88,9 +91,18 @@ public struct PDFA4Validator: PDFAValidator {
     }
 
     public func detectClaimedConformance(_ document: Any) async throws -> PDFAConformance? {
-        // In a real implementation, this would parse XMP metadata
-        // For now, return nil (no claimed conformance detected)
-        // TODO: Implement XMP metadata parsing when parser is available
+        // Parse XMP metadata to detect PDF/A-4 conformance claim.
+        // Look for pdfaid:part == 4 in the document XMP metadata.
+        // PDF/A-4 does not have separate A/B/U conformance levels.
+        // Returns PDFAConformance for PDF/A-4, or nil if not claimed.
+        #if canImport(SwiftVerificarParser)
+        if let pdfDoc = document as? PDFDocument,
+           let xmp = pdfDoc.xmpMetadata,
+           let part = xmp.pdfaPart,
+           part == 4 {
+            return try? PDFAConformance(part: .part4, level: .b)
+        }
+        #endif
         return nil
     }
 
