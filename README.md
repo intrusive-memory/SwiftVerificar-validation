@@ -12,7 +12,7 @@ SwiftVerificar-validation is the core PDF validation engine for the SwiftVerific
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/intrusive-memory/SwiftVerificar-validation.git", from: "0.1.0")
+    .package(url: "https://github.com/intrusive-memory/SwiftVerificar-validation.git", from: "0.2.0")
 ]
 ```
 

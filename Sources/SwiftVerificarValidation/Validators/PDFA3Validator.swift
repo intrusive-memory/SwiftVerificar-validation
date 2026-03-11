@@ -1,5 +1,8 @@
 import Foundation
 import SwiftVerificarValidationProfiles
+#if canImport(SwiftVerificarParser)
+import SwiftVerificarParser
+#endif
 
 /// Validator for PDF/A-3a, PDF/A-3b, and PDF/A-3u conformance
 ///
@@ -114,9 +117,19 @@ public struct PDFA3Validator: PDFAValidator {
     }
 
     public func detectClaimedConformance(_ document: Any) async throws -> PDFAConformance? {
-        // In a real implementation, this would parse XMP metadata
-        // For now, return nil (no claimed conformance detected)
-        // TODO: Implement XMP metadata parsing when parser is available
+        // Parse XMP metadata to detect PDF/A-3 conformance claim.
+        // Look for pdfaid:part == 3 and pdfaid:conformance in the document XMP metadata.
+        // Returns the matching PDFAConformance (PDF/A-3a, 3b, or 3u), or nil if not claimed.
+        #if canImport(SwiftVerificarParser)
+        if let pdfDoc = document as? PDFDocument,
+           let xmp = pdfDoc.xmpMetadata,
+           let part = xmp.pdfaPart,
+           part == 3,
+           let conformanceStr = xmp.pdfaConformance {
+            let level = PDFALevel(rawValue: conformanceStr.uppercased()) ?? .b
+            return try? PDFAConformance(part: .part3, level: level)
+        }
+        #endif
         return nil
     }
 

@@ -1,5 +1,8 @@
 import Foundation
 import SwiftVerificarValidationProfiles
+#if canImport(SwiftVerificarParser)
+import SwiftVerificarParser
+#endif
 
 /// Validator for PDF/A-1a and PDF/A-1b conformance
 ///
@@ -108,9 +111,19 @@ public struct PDFA1Validator: PDFAValidator {
     }
 
     public func detectClaimedConformance(_ document: Any) async throws -> PDFAConformance? {
-        // In a real implementation, this would parse XMP metadata
-        // For now, return nil (no claimed conformance detected)
-        // TODO: Implement XMP metadata parsing when parser is available
+        // Parse XMP metadata to detect PDF/A-1 conformance claim.
+        // Look for pdfaid:part == 1 and pdfaid:conformance in the document XMP metadata.
+        // Returns the matching PDFAConformance for PDF/A-1a or PDF/A-1b, or nil otherwise.
+        #if canImport(SwiftVerificarParser)
+        if let pdfDoc = document as? PDFDocument,
+           let xmp = pdfDoc.xmpMetadata,
+           let part = xmp.pdfaPart,
+           part == 1,
+           let conformanceStr = xmp.pdfaConformance {
+            let level = PDFALevel(rawValue: conformanceStr.uppercased()) ?? .b
+            return try? PDFAConformance(part: .part1, level: level)
+        }
+        #endif
         return nil
     }
 
@@ -216,11 +229,7 @@ public struct DefaultProfileLoader: ValidationProfileLoader {
     public init() {}
 
     public func loadProfile(flavour: PDFAFlavour) async throws -> ValidationProfile {
-        // In a real implementation, this would load from XML files or embedded resources
-        // For now, create a minimal profile for testing
-        // TODO: Implement actual profile loading when profiles package is integrated
-
-        // Map PDF/A flavour to PDFFlavour
+        // Map PDFAFlavour to PDFFlavour for use with ValidationProfileLoader (ProfileLoader.shared)
         let pdfFlavour: PDFFlavour
         switch flavour {
         case .pdfa1(let level):
@@ -241,17 +250,23 @@ public struct DefaultProfileLoader: ValidationProfileLoader {
             pdfFlavour = .pdfA4
         }
 
-        return ValidationProfile(
-            details: ProfileDetails(
-                name: flavour.profileName,
-                description: "PDF/A validation profile for \(flavour.profileName)",
-                creator: "SwiftVerificar",
-                created: Date()
-            ),
-            hash: nil,
-            rules: [], // Empty rules for now - will be populated from XML profiles
-            variables: [],
-            flavour: pdfFlavour
-        )
+        // Load the real validation profile via ValidationProfileLoader (ProfileLoader.shared)
+        do {
+            return try await ProfileLoader.shared.loadProfile(for: pdfFlavour)
+        } catch {
+            // Fall back to a minimal profile if the XML resource is not available
+            return ValidationProfile(
+                details: ProfileDetails(
+                    name: flavour.profileName,
+                    description: "PDF/A validation profile for \(flavour.profileName)",
+                    creator: "SwiftVerificar",
+                    created: Date()
+                ),
+                hash: nil,
+                rules: [],
+                variables: [],
+                flavour: pdfFlavour
+            )
+        }
     }
 }

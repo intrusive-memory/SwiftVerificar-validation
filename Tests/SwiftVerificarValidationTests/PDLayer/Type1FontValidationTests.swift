@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 @testable import SwiftVerificarValidation
+import SwiftVerificarParser
 
 // MARK: - Type1FontValidation Tests
 

@@ -1,6 +1,7 @@
 import Testing
 import Foundation
 @testable import SwiftVerificarValidation
+import SwiftVerificarParser
 
 /// Tests for TextOperatorValidator.
 @Suite("TextOperatorValidator Tests")
