@@ -8,14 +8,14 @@ struct SwiftVerificarValidationTests {
 
     @Test("Library version is set correctly")
     func versionIsSet() {
-        #expect(SwiftVerificarValidation.version == "0.1.0")
+        #expect(SwiftVerificarValidation.version == "0.2.0")
     }
 
     @Test("Validation can be instantiated")
     func canInstantiate() {
         let validation = SwiftVerificarValidation()
         // Just verify it creates successfully (it's a struct, can't be nil)
-        #expect(SwiftVerificarValidation.version == "0.1.0")
+        #expect(SwiftVerificarValidation.version == "0.2.0")
     }
 
     @Test("ValidationProfile can be created")

@@ -18,7 +18,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/intrusive-memory/SwiftVerificar-validation-profiles.git", from: "0.1.0"),
         // Local dev: .package(path: "../SwiftVerificar-parser"),
-        .package(url: "https://github.com/intrusive-memory/SwiftVerificar-parser.git", branch: "development"),
+        .package(url: "https://github.com/intrusive-memory/SwiftVerificar-parser.git", from: "0.2.0"),
     ],
     targets: [
         .target(
