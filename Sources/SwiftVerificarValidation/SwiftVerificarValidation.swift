@@ -10,7 +10,7 @@ import SwiftVerificarValidationProfiles
 public struct SwiftVerificarValidation {
 
     /// The current version of the library
-    public static let version = "0.2.2"
+    public static let version = "0.2.2-dev"
 
     /// Creates a new instance of SwiftVerificarValidation
     public init() {}
